@@ -1,6 +1,11 @@
 <template>
   <div>
-    Grid:
+    <button @click="fillGrid">Start</button>
+    <button @click="resetGrid">Reset</button>
+    <button @click="toggleRotate">Rotate</button>
+    <button @click="setTiles">Change Tiles</button>
+    <button @click="increaseSize">Bigger</button>
+    <button @click="decreaseSize">Smaller</button>
     <div id="grid" :class="{ rotate: rotate }">
       <div class="row" v-for="(row, index) in grid.contents" :key="index">
         <div class="cell" v-for="(cell, index) in row" :key="index">
@@ -14,10 +19,6 @@
         </div>
       </div>
     </div>
-    <button @click="fillGrid">Click me</button>
-    <button @click="resetGrid">Reset</button>
-    <button @click="toggleRotate">Rotate</button>
-    <button @click="setTiles">Change Tiles</button>
   </div>
 </template>
 
@@ -31,8 +32,8 @@ export default {
   components: {},
   data() {
     return {
-      width: 20,
-      height: 20,
+      width: 10,
+      height: 10,
 
       grid: {
         contents: [],
@@ -51,6 +52,22 @@ export default {
   methods: {
     getImageUrl: function (tileName) {
       return require("@/assets/" + tileName);
+    },
+    increaseSize: function () {
+      if (this.width < 50) {
+        this.width += 1;
+        this.height += 1;
+
+        this.createGrid();
+      }
+    },
+    decreaseSize: function () {
+      if (this.width > 2) {
+        this.width -= 1;
+        this.height -= 1;
+
+        this.createGrid();
+      }
     },
     setTiles: function () {
       if (this.tileset == "land") {
@@ -88,7 +105,9 @@ export default {
         ];
         this.tiles = landTiles;
       }
-
+      this.createGrid();
+    },
+    createGrid: function () {
       this.grid = new Grid(this.width, this.height, this.tiles);
     },
     fillGrid: function () {
@@ -100,7 +119,7 @@ export default {
         setTimeout(() => {
           this.resetGrid();
           this.fillGrid();
-        }, 1000);
+        }, 2000);
       }
     },
     resetGrid: function () {
