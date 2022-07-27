@@ -1,7 +1,7 @@
 <template>
   <div>
     Grid:
-    <div id="grid" :class="{rotate: rotate}">
+    <div id="grid" :class="{ rotate: rotate }">
       <div class="row" v-for="(row, index) in grid.contents" :key="index">
         <div class="cell" v-for="(cell, index) in row" :key="index">
           <img
@@ -17,6 +17,7 @@
     <button @click="fillGrid">Click me</button>
     <button @click="resetGrid">Reset</button>
     <button @click="toggleRotate">Rotate</button>
+    <button @click="setTiles">Change Tiles</button>
   </div>
 </template>
 
@@ -38,51 +39,57 @@ export default {
       },
 
       tiles: [],
+      tileset: "land",
       landTiles: [],
       timeoutID: undefined,
-      rotate: false
+      rotate: false,
     };
   },
   mounted() {
-    /*
-    const landTiles = [
-      new Tile("tileA", new Sockets("ABB", "BBB", "BBA", "AAA"), 0),
-      new Tile("tileA", new Sockets("ABB", "BBB", "BBA", "AAA"), 1),
-      new Tile("tileA", new Sockets("ABB", "BBB", "BBA", "AAA"), 2),
-      new Tile("tileA", new Sockets("ABB", "BBB", "BBA", "AAA"), 3),
-      new Tile("tileB", new Sockets("AAA", "AAA", "AAA", "AAA")),
-      new Tile("tileC", new Sockets("BBB", "BBB", "BBB", "BBB")), // Lots of C for weighting
-      new Tile("tileC", new Sockets("BBB", "BBB", "BBB", "BBB")),
-      new Tile("tileC", new Sockets("BBB", "BBB", "BBB", "BBB")),
-      new Tile("tileC", new Sockets("BBB", "BBB", "BBB", "BBB")),
-      new Tile("tileC", new Sockets("BBB", "BBB", "BBB", "BBB")),
-      new Tile("tileD", new Sockets("ABB", "BBA", "AAA", "AAA"), 0),
-      new Tile("tileD", new Sockets("ABB", "BBA", "AAA", "AAA"), 1),
-      new Tile("tileD", new Sockets("ABB", "BBA", "AAA", "AAA"), 2),
-      new Tile("tileD", new Sockets("ABB", "BBA", "AAA", "AAA"), 3),
-      new Tile("tileE", new Sockets("BBB", "BBB", "BBA", "ABB"), 0),
-      new Tile("tileE", new Sockets("BBB", "BBB", "BBA", "ABB"), 1),
-      new Tile("tileE", new Sockets("BBB", "BBB", "BBA", "ABB"), 2),
-      new Tile("tileE", new Sockets("BBB", "BBB", "BBA", "ABB"), 3),
-    ];
-    this.tiles = landTiles;
-    */
-
-    const pipeTiles = [
-      new Tile("tile2", new Sockets("BBB", "BBB", "BBB", "BBB")),
-      new Tile("tile1", new Sockets("BBB", "BAB", "BAB", "BAB"), 0),
-      new Tile("tile1", new Sockets("BBB", "BAB", "BAB", "BAB"), 1),
-      new Tile("tile1", new Sockets("BBB", "BAB", "BAB", "BAB"), 2),
-      new Tile("tile1", new Sockets("BBB", "BAB", "BAB", "BAB"), 3),
-    ];
-
-    this.tiles = pipeTiles;
-
-    this.grid = new Grid(this.width, this.height, this.tiles);
+    this.setTiles();
   },
   methods: {
     getImageUrl: function (tileName) {
       return require("@/assets/" + tileName);
+    },
+    setTiles: function () {
+      if (this.tileset == "land") {
+        this.tileset = "pipes";
+        const pipeTiles = [
+          new Tile("tile0", new Sockets("BBB", "BBB", "BBB", "BBB")),
+          new Tile("tile1", new Sockets("BBB", "BAB", "BAB", "BAB"), 0),
+          new Tile("tile1", new Sockets("BBB", "BAB", "BAB", "BAB"), 1),
+          new Tile("tile1", new Sockets("BBB", "BAB", "BAB", "BAB"), 2),
+          new Tile("tile1", new Sockets("BBB", "BAB", "BAB", "BAB"), 3),
+        ];
+        this.tiles = pipeTiles;
+      } else {
+        this.tileset = "land";
+
+        const landTiles = [
+          new Tile("tileA", new Sockets("ABB", "BBB", "BBA", "AAA"), 0),
+          new Tile("tileA", new Sockets("ABB", "BBB", "BBA", "AAA"), 1),
+          new Tile("tileA", new Sockets("ABB", "BBB", "BBA", "AAA"), 2),
+          new Tile("tileA", new Sockets("ABB", "BBB", "BBA", "AAA"), 3),
+          new Tile("tileB", new Sockets("AAA", "AAA", "AAA", "AAA")),
+          new Tile("tileC", new Sockets("BBB", "BBB", "BBB", "BBB")), // Lots of C for weighting
+          new Tile("tileC", new Sockets("BBB", "BBB", "BBB", "BBB")),
+          new Tile("tileC", new Sockets("BBB", "BBB", "BBB", "BBB")),
+          new Tile("tileC", new Sockets("BBB", "BBB", "BBB", "BBB")),
+          new Tile("tileC", new Sockets("BBB", "BBB", "BBB", "BBB")),
+          new Tile("tileD", new Sockets("ABB", "BBA", "AAA", "AAA"), 0),
+          new Tile("tileD", new Sockets("ABB", "BBA", "AAA", "AAA"), 1),
+          new Tile("tileD", new Sockets("ABB", "BBA", "AAA", "AAA"), 2),
+          new Tile("tileD", new Sockets("ABB", "BBA", "AAA", "AAA"), 3),
+          new Tile("tileE", new Sockets("BBB", "BBB", "BBA", "ABB"), 0),
+          new Tile("tileE", new Sockets("BBB", "BBB", "BBA", "ABB"), 1),
+          new Tile("tileE", new Sockets("BBB", "BBB", "BBA", "ABB"), 2),
+          new Tile("tileE", new Sockets("BBB", "BBB", "BBA", "ABB"), 3),
+        ];
+        this.tiles = landTiles;
+      }
+
+      this.grid = new Grid(this.width, this.height, this.tiles);
     },
     fillGrid: function () {
       if (!this.grid.complete()) {
@@ -104,9 +111,9 @@ export default {
       // Reset Grid
       this.grid.setup();
     },
-    toggleRotate: function() {
+    toggleRotate: function () {
       this.rotate = !this.rotate;
-    }
+    },
   },
 };
 </script>
@@ -129,7 +136,7 @@ export default {
 
 @keyframes rotation {
   from {
-    transform: rotate3d(0, 0 ,0 , 0deg);
+    transform: rotate3d(0, 0, 0, 0deg);
   }
   to {
     transform: rotate3d(1, 1, 1, 359deg);
