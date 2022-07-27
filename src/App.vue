@@ -6,18 +6,24 @@
     <button @click="setTiles">Change Tiles</button>
     <button @click="increaseSize">Bigger</button>
     <button @click="decreaseSize">Smaller</button>
+    <button @click="changeHue">Change Hue</button>
     <h2 v-if="tilesets[tilesetIndex] && tilesets[tilesetIndex].name">
       {{ tilesets[tilesetIndex].name }}
     </h2>
     <div id="grid" :class="{ rotate: rotate }">
       <div class="row" v-for="(row, index) in grid.contents" :key="index">
-        <div class="cell" v-for="(cell, index) in row" :key="index">
+        <div
+          class="cell"
+          v-for="(cell, index) in row"
+          :key="index"
+          :style="'filter: hue-rotate(' + hueValue + 'deg)'"
+        >
           <img
             v-if="cell.tile && cell.tile.image != undefined"
             class="tile"
             :src="getImageUrl(cell.tile.image)"
             alt=""
-            :style="'transform: rotate(' + cell.tile.rotation + ')'"
+            :style="'transform: rotate(' + cell.tile.rotation + ') '"
           />
         </div>
       </div>
@@ -47,6 +53,7 @@ export default {
       rotate: false,
       tilesets: [],
       tilesetIndex: 0,
+      hueValue: 0,
     };
   },
   mounted() {
@@ -72,6 +79,9 @@ export default {
 
         this.createGrid();
       }
+    },
+    changeHue: function () {
+      this.hueValue = Math.floor(Math.random() * (359 - 0 + 1));
     },
     createTilesets: function () {
       const blockTiles = [
