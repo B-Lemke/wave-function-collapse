@@ -129,7 +129,7 @@ export default {
 
 @keyframes rotation {
   from {
-    transform: rotate3d(0);
+    transform: rotate3d(0, 0 ,0 , 0deg);
   }
   to {
     transform: rotate3d(1, 1, 1, 359deg);
